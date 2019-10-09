@@ -15,13 +15,12 @@
  */
 package com.jess.arms.http.log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.jess.arms.di.module.GlobalConfigModule;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import okhttp3.MediaType;
 import okhttp3.Request;
 
@@ -38,7 +37,7 @@ import okhttp3.Request;
  */
 
 public interface FormatPrinter {
-
+    
     /**
      * 打印网络请求信息, 当网络请求时 {{@link okhttp3.RequestBody}} 可以解析的情况
      *
@@ -46,14 +45,14 @@ public interface FormatPrinter {
      * @param bodyString 发送给服务器的请求体中的数据(已解析)
      */
     void printJsonRequest(@NonNull Request request, @NonNull String bodyString);
-
+    
     /**
      * 打印网络请求信息, 当网络请求时 {{@link okhttp3.RequestBody}} 为 {@code null} 或不可解析的情况
      *
      * @param request
      */
     void printFileRequest(@NonNull Request request);
-
+    
     /**
      * 打印网络响应信息, 当网络响应时 {{@link okhttp3.ResponseBody}} 可以解析的情况
      *
@@ -69,7 +68,7 @@ public interface FormatPrinter {
      */
     void printJsonResponse(long chainMs, boolean isSuccessful, int code, @NonNull String headers, @Nullable MediaType contentType,
                            @Nullable String bodyString, @NonNull List<String> segments, @NonNull String message, @NonNull String responseUrl);
-
+    
     /**
      * 打印网络响应信息, 当网络响应时 {{@link okhttp3.ResponseBody}} 为 {@code null} 或不可解析的情况
      *

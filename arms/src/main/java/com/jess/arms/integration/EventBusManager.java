@@ -34,7 +34,10 @@ import static com.jess.arms.base.Platform.DEPENDENCY_EVENTBUS;
  */
 public final class EventBusManager {
     private static volatile EventBusManager sInstance;
-
+    
+    private EventBusManager() {
+    }
+    
     public static EventBusManager getInstance() {
         if (sInstance == null) {
             synchronized (EventBusManager.class) {
@@ -45,9 +48,7 @@ public final class EventBusManager {
         }
         return sInstance;
     }
-
-    private EventBusManager() { }
-
+    
     /**
      * 注册订阅者, 允许在项目中同时依赖两个 EventBus, 只要您喜欢
      *
@@ -63,7 +64,7 @@ public final class EventBusManager {
             }
         }
     }
-
+    
     /**
      * 注销订阅者, 允许在项目中同时依赖两个 EventBus, 只要您喜欢
      *
@@ -79,7 +80,7 @@ public final class EventBusManager {
             }
         }
     }
-
+    
     /**
      * 发送事件, 如果您在项目中同时依赖了两个 EventBus, 请自己使用想使用的 EventBus 的 Api 发送事件
      *
@@ -92,7 +93,7 @@ public final class EventBusManager {
             org.greenrobot.eventbus.EventBus.getDefault().post(event);
         }
     }
-
+    
     /**
      * 发送黏性事件, 如果您在项目中同时依赖了两个 EventBus, 请自己使用想使用的 EventBus 的 Api 发送黏性事件
      *
@@ -105,7 +106,7 @@ public final class EventBusManager {
             org.greenrobot.eventbus.EventBus.getDefault().postSticky(event);
         }
     }
-
+    
     /**
      * 注销黏性事件, 如果您在项目中同时依赖了两个 EventBus, 请自己使用想使用的 EventBus 的 Api 注销黏性事件
      *
@@ -122,7 +123,7 @@ public final class EventBusManager {
         }
         return null;
     }
-
+    
     /**
      * 清除订阅者和事件的缓存, 如果您在项目中同时依赖了两个 EventBus, 请自己使用想使用的 EventBus 的 Api 清除订阅者和事件的缓存
      */
@@ -133,7 +134,7 @@ public final class EventBusManager {
             org.greenrobot.eventbus.EventBus.clearCaches();
         }
     }
-
+    
     /**
      * {@link org.greenrobot.eventbus.EventBus} 要求注册之前, 订阅者必须含有一个或以上声明 {@link org.greenrobot.eventbus.Subscribe}
      * 注解的方法, 否则会报错, 所以如果要想完成在基类中自动注册, 避免报错就要先检查是否符合注册资格
@@ -152,9 +153,9 @@ public final class EventBusManager {
             } catch (Throwable th) {
                 try {
                     allMethods = clazz.getMethods();
-                }catch (Throwable th2){
+                } catch (Throwable th2) {
                     continue;
-                }finally {
+                } finally {
                     skipSuperClasses = true;
                 }
             }
@@ -171,7 +172,7 @@ public final class EventBusManager {
         }
         return false;
     }
-
+    
     private boolean isSystemCalss(String name) {
         return name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.");
     }

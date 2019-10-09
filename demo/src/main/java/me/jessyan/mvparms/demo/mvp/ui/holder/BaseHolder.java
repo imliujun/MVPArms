@@ -18,10 +18,9 @@ package me.jessyan.mvparms.demo.mvp.ui.holder;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import me.jessyan.mvparms.demo.util.ThirdViewUtil;
-
 import androidx.recyclerview.widget.RecyclerView;
 import me.jessyan.mvparms.demo.mvp.ui.adapter.DefaultAdapter;
+import me.jessyan.mvparms.demo.util.ThirdViewUtil;
 
 /**
  * ================================================
@@ -33,9 +32,9 @@ import me.jessyan.mvparms.demo.mvp.ui.adapter.DefaultAdapter;
  * ================================================
  */
 public abstract class BaseHolder<T> extends RecyclerView.ViewHolder implements View.OnClickListener {
-    protected OnViewClickListener mOnViewClickListener = null;
     protected final String TAG = this.getClass().getSimpleName();
-
+    protected OnViewClickListener mOnViewClickListener = null;
+    
     public BaseHolder(View itemView) {
         super(itemView);
         //点击事件
@@ -43,7 +42,7 @@ public abstract class BaseHolder<T> extends RecyclerView.ViewHolder implements V
         //绑定 ButterKnife
         ThirdViewUtil.bindTarget(this, itemView);
     }
-
+    
     /**
      * 设置数据
      *
@@ -51,27 +50,31 @@ public abstract class BaseHolder<T> extends RecyclerView.ViewHolder implements V
      * @param position 在 RecyclerView 中的位置
      */
     public abstract void setData(@NonNull T data, int position);
-
+    
     /**
      * 在 Activity 的 onDestroy 中使用 {@link DefaultAdapter#releaseAllHolder(RecyclerView)} 方法 (super.onDestroy() 之前)
      * {@link BaseHolder#onRelease()} 才会被调用, 可以在此方法中释放一些资源
      */
     public void onRelease() {
-
+    
     }
-
+    
     @Override
     public void onClick(View view) {
         if (mOnViewClickListener != null) {
             mOnViewClickListener.onViewClick(view, this.getPosition());
         }
     }
-
+    
+    public void setOnItemClickListener(OnViewClickListener listener) {
+        this.mOnViewClickListener = listener;
+    }
+    
     /**
      * item 点击事件
      */
     public interface OnViewClickListener {
-
+        
         /**
          * item 被点击
          *
@@ -79,9 +82,5 @@ public abstract class BaseHolder<T> extends RecyclerView.ViewHolder implements V
          * @param position 在 RecyclerView 中的位置
          */
         void onViewClick(View view, int position);
-    }
-
-    public void setOnItemClickListener(OnViewClickListener listener) {
-        this.mOnViewClickListener = listener;
     }
 }

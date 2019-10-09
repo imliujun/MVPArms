@@ -15,14 +15,14 @@
  */
 package com.jess.arms.integration.cache;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.jess.arms.utils.Preconditions;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * ================================================
@@ -41,15 +41,29 @@ import java.util.Set;
  * ================================================
  */
 public class IntelligentCache<V> implements Cache<String, V> {
-    private final Map<String, V> mMap;//可将数据永久存储至内存中的存储容器
-    private final Cache<String, V> mCache;//当达到最大容量时可根据 LRU 算法抛弃不合规数据的存储容器
     public static final String KEY_KEEP = "Keep=";
-
+    //可将数据永久存储至内存中的存储容器
+    private final Map<String, V> mMap;
+    //当达到最大容量时可根据 LRU 算法抛弃不合规数据的存储容器
+    private final Cache<String, V> mCache;
+    
     public IntelligentCache(int size) {
         this.mMap = new HashMap<>();
         this.mCache = new LruCache<>(size);
     }
-
+    
+    /**
+     * 使用此方法返回的值作为 key, 可以将数据永久存储至内存中
+     *
+     * @param key {@code key}
+     * @return Keep= + {@code key}
+     */
+    @NonNull
+    public static String getKeyOfKeep(@NonNull String key) {
+        Preconditions.checkNotNull(key, "key == null");
+        return IntelligentCache.KEY_KEEP + key;
+    }
+    
     /**
      * 将 {@link #mMap} 和 {@link #mCache} 的 {@code size} 相加后返回
      *
@@ -59,7 +73,7 @@ public class IntelligentCache<V> implements Cache<String, V> {
     public synchronized int size() {
         return mMap.size() + mCache.size();
     }
-
+    
     /**
      * 将 {@link #mMap} 和 {@link #mCache} 的 {@code maxSize} 相加后返回
      *
@@ -69,7 +83,7 @@ public class IntelligentCache<V> implements Cache<String, V> {
     public synchronized int getMaxSize() {
         return mMap.size() + mCache.getMaxSize();
     }
-
+    
     /**
      * 如果在 {@code key} 中使用 {@link #KEY_KEEP} 作为其前缀, 则操作 {@link #mMap}, 否则操作 {@link #mCache}
      *
@@ -84,7 +98,7 @@ public class IntelligentCache<V> implements Cache<String, V> {
         }
         return mCache.get(key);
     }
-
+    
     /**
      * 如果在 {@code key} 中使用 {@link #KEY_KEEP} 作为其前缀, 则操作 {@link #mMap}, 否则操作 {@link #mCache}
      *
@@ -100,7 +114,7 @@ public class IntelligentCache<V> implements Cache<String, V> {
         }
         return mCache.put(key, value);
     }
-
+    
     /**
      * 如果在 {@code key} 中使用 {@link #KEY_KEEP} 作为其前缀, 则操作 {@link #mMap}, 否则操作 {@link #mCache}
      *
@@ -115,7 +129,7 @@ public class IntelligentCache<V> implements Cache<String, V> {
         }
         return mCache.remove(key);
     }
-
+    
     /**
      * 如果在 {@code key} 中使用 {@link #KEY_KEEP} 作为其前缀, 则操作 {@link #mMap}, 否则操作 {@link #mCache}
      *
@@ -129,7 +143,7 @@ public class IntelligentCache<V> implements Cache<String, V> {
         }
         return mCache.containsKey(key);
     }
-
+    
     /**
      * 将 {@link #mMap} 和 {@link #mCache} 的 {@code keySet} 合并返回
      *
@@ -141,7 +155,7 @@ public class IntelligentCache<V> implements Cache<String, V> {
         set.addAll(mMap.keySet());
         return set;
     }
-
+    
     /**
      * 清空 {@link #mMap} 和 {@link #mCache} 容器
      */
@@ -149,17 +163,5 @@ public class IntelligentCache<V> implements Cache<String, V> {
     public void clear() {
         mCache.clear();
         mMap.clear();
-    }
-
-    /**
-     * 使用此方法返回的值作为 key, 可以将数据永久存储至内存中
-     *
-     * @param key {@code key}
-     * @return Keep= + {@code key}
-     */
-    @NonNull
-    public static String getKeyOfKeep(@NonNull String key) {
-        Preconditions.checkNotNull(key, "key == null");
-        return IntelligentCache.KEY_KEEP + key;
     }
 }

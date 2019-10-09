@@ -17,11 +17,10 @@ package me.jessyan.mvparms.demo.app;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import android.view.View;
-import com.jess.arms.integration.cache.IntelligentCache;
-import com.jess.arms.utils.ArmsUtils;
 import timber.log.Timber;
 
 /**
@@ -33,13 +32,13 @@ import timber.log.Timber;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-public class FragmentLifecycleCallbacksImpl extends FragmentManager.FragmentLifecycleCallbacks{
-
+public class FragmentLifecycleCallbacksImpl extends FragmentManager.FragmentLifecycleCallbacks {
+    
     @Override
     public void onFragmentAttached(FragmentManager fm, Fragment f, Context context) {
         Timber.i(f.toString() + " - onFragmentAttached");
     }
-
+    
     @Override
     public void onFragmentCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
         Timber.i(f.toString() + " - onFragmentCreated");
@@ -49,52 +48,52 @@ public class FragmentLifecycleCallbacksImpl extends FragmentManager.FragmentLife
         // 在 Activity 中绑定少量的 Fragment 建议这样做,如果需要绑定较多的 Fragment 不建议设置此参数,如 ViewPager 需要展示较多 Fragment
         f.setRetainInstance(true);
     }
-
+    
     @Override
     public void onFragmentViewCreated(FragmentManager fm, Fragment f, View v, Bundle savedInstanceState) {
         Timber.i(f.toString() + " - onFragmentViewCreated");
     }
-
+    
     @Override
     public void onFragmentActivityCreated(FragmentManager fm, Fragment f, Bundle savedInstanceState) {
         Timber.i(f.toString() + " - onFragmentActivityCreated");
     }
-
+    
     @Override
     public void onFragmentStarted(FragmentManager fm, Fragment f) {
         Timber.i(f.toString() + " - onFragmentStarted");
     }
-
+    
     @Override
     public void onFragmentResumed(FragmentManager fm, Fragment f) {
         Timber.i(f.toString() + " - onFragmentResumed");
     }
-
+    
     @Override
     public void onFragmentPaused(FragmentManager fm, Fragment f) {
         Timber.i(f.toString() + " - onFragmentPaused");
     }
-
+    
     @Override
     public void onFragmentStopped(FragmentManager fm, Fragment f) {
         Timber.i(f.toString() + " - onFragmentStopped");
     }
-
+    
     @Override
     public void onFragmentSaveInstanceState(FragmentManager fm, Fragment f, Bundle outState) {
         Timber.i(f.toString() + " - onFragmentSaveInstanceState");
     }
-
+    
     @Override
     public void onFragmentViewDestroyed(FragmentManager fm, Fragment f) {
         Timber.i(f.toString() + " - onFragmentViewDestroyed");
     }
-
+    
     @Override
     public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
         Timber.i(f.toString() + " - onFragmentDestroyed");
     }
-
+    
     @Override
     public void onFragmentDetached(FragmentManager fm, Fragment f) {
         Timber.i(f.toString() + " - onFragmentDetached");

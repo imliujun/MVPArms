@@ -16,8 +16,6 @@
 package me.jessyan.mvparms.demo.app;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -27,6 +25,8 @@ import com.jess.arms.http.log.RequestInterceptor;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import me.jessyan.mvparms.demo.mvp.model.entity.User;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -44,11 +44,11 @@ import timber.log.Timber;
  */
 public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
     private Context context;
-
+    
     public GlobalHttpHandlerImpl(Context context) {
         this.context = context;
     }
-
+    
     /**
      * 这里可以先客户端一步拿到每一次 Http 请求的结果, 可以先解析成 Json, 再做一些操作, 如检测到 token 过期后
      * 重新请求 token, 并重新执行请求
@@ -86,7 +86,7 @@ public class GlobalHttpHandlerImpl implements GlobalHttpHandler {
         如果不需要返回新的结果, 则直接把参数 response 返回出去即可*/
         return response;
     }
-
+    
     /**
      * 这里可以在请求服务器之前拿到 {@link Request}, 做一些操作比如给 {@link Request} 统一添加 token 或者 header 以及参数加密等操作
      *

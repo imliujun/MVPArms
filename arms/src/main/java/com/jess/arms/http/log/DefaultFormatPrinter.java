@@ -15,8 +15,6 @@
  */
 package com.jess.arms.http.log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.jess.arms.di.module.GlobalConfigModule;
@@ -25,6 +23,8 @@ import com.jess.arms.utils.LogUtils;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import okhttp3.MediaType;
 import okhttp3.Request;
 
@@ -43,10 +43,10 @@ public class DefaultFormatPrinter implements FormatPrinter {
     private static final String TAG = "ArmsHttpLog";
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private static final String DOUBLE_SEPARATOR = LINE_SEPARATOR + LINE_SEPARATOR;
-
+    
     private static final String[] OMITTED_RESPONSE = {LINE_SEPARATOR, "Omitted response body"};
     private static final String[] OMITTED_REQUEST = {LINE_SEPARATOR, "Omitted request body"};
-
+    
     private static final String N = "\n";
     private static final String T = "\t";
     private static final String REQUEST_UP_LINE = "   ┌────── Request ────────────────────────────────────────────────────────────────────────";
@@ -62,99 +62,18 @@ public class DefaultFormatPrinter implements FormatPrinter {
     private static final String CORNER_BOTTOM = "└ ";
     private static final String CENTER_LINE = "├ ";
     private static final String DEFAULT_LINE = "│ ";
-
+    private static final String[] ARMS = new String[]{"-A-", "-R-", "-M-", "-S-"};
+    private static ThreadLocal<Integer> last = new ThreadLocal<Integer>() {
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
+    
     private static boolean isEmpty(String line) {
         return TextUtils.isEmpty(line) || N.equals(line) || T.equals(line) || TextUtils.isEmpty(line.trim());
     }
-
-    /**
-     * 打印网络请求信息, 当网络请求时 {{@link okhttp3.RequestBody}} 可以解析的情况
-     *
-     * @param request
-     * @param bodyString
-     */
-    @Override
-    public void printJsonRequest(@NonNull Request request, @NonNull String bodyString) {
-        final String requestBody = LINE_SEPARATOR + BODY_TAG + LINE_SEPARATOR + bodyString;
-        final String tag = getTag(true);
-
-        LogUtils.debugInfo(tag, REQUEST_UP_LINE);
-        logLines(tag, new String[]{URL_TAG + request.url()}, false);
-        logLines(tag, getRequest(request), true);
-        logLines(tag, requestBody.split(LINE_SEPARATOR), true);
-        LogUtils.debugInfo(tag, END_LINE);
-    }
-
-    /**
-     * 打印网络请求信息, 当网络请求时 {{@link okhttp3.RequestBody}} 为 {@code null} 或不可解析的情况
-     *
-     * @param request
-     */
-    @Override
-    public void printFileRequest(@NonNull Request request) {
-        final String tag = getTag(true);
-
-        LogUtils.debugInfo(tag, REQUEST_UP_LINE);
-        logLines(tag, new String[]{URL_TAG + request.url()}, false);
-        logLines(tag, getRequest(request), true);
-        logLines(tag, OMITTED_REQUEST, true);
-        LogUtils.debugInfo(tag, END_LINE);
-    }
-
-    /**
-     * 打印网络响应信息, 当网络响应时 {{@link okhttp3.ResponseBody}} 可以解析的情况
-     *
-     * @param chainMs      服务器响应耗时(单位毫秒)
-     * @param isSuccessful 请求是否成功
-     * @param code         响应码
-     * @param headers      请求头
-     * @param contentType  服务器返回数据的数据类型
-     * @param bodyString   服务器返回的数据(已解析)
-     * @param segments     域名后面的资源地址
-     * @param message      响应信息
-     * @param responseUrl  请求地址
-     */
-    @Override
-    public void printJsonResponse(long chainMs, boolean isSuccessful, int code, @NonNull String headers, @Nullable MediaType contentType,
-                                  @Nullable String bodyString, @NonNull List<String> segments, @NonNull String message, @NonNull final String responseUrl) {
-        bodyString = RequestInterceptor.isJson(contentType) ? CharacterHandler.jsonFormat(bodyString)
-                : RequestInterceptor.isXml(contentType) ? CharacterHandler.xmlFormat(bodyString) : bodyString;
-
-        final String responseBody = LINE_SEPARATOR + BODY_TAG + LINE_SEPARATOR + bodyString;
-        final String tag = getTag(false);
-        final String[] urlLine = {URL_TAG + responseUrl, N};
-
-        LogUtils.debugInfo(tag, RESPONSE_UP_LINE);
-        logLines(tag, urlLine, true);
-        logLines(tag, getResponse(headers, chainMs, code, isSuccessful, segments, message), true);
-        logLines(tag, responseBody.split(LINE_SEPARATOR), true);
-        LogUtils.debugInfo(tag, END_LINE);
-    }
-
-    /**
-     * 打印网络响应信息, 当网络响应时 {{@link okhttp3.ResponseBody}} 为 {@code null} 或不可解析的情况
-     *
-     * @param chainMs      服务器响应耗时(单位毫秒)
-     * @param isSuccessful 请求是否成功
-     * @param code         响应码
-     * @param headers      请求头
-     * @param segments     域名后面的资源地址
-     * @param message      响应信息
-     * @param responseUrl  请求地址
-     */
-    @Override
-    public void printFileResponse(long chainMs, boolean isSuccessful, int code, @NonNull String headers,
-                                  @NonNull List<String> segments, @NonNull String message, @NonNull final String responseUrl) {
-        final String tag = getTag(false);
-        final String[] urlLine = {URL_TAG + responseUrl, N};
-
-        LogUtils.debugInfo(tag, RESPONSE_UP_LINE);
-        logLines(tag, urlLine, true);
-        logLines(tag, getResponse(headers, chainMs, code, isSuccessful, segments, message), true);
-        logLines(tag, OMITTED_RESPONSE, true);
-        LogUtils.debugInfo(tag, END_LINE);
-    }
-
+    
     /**
      * 对 {@code lines} 中的信息进行逐行打印
      *
@@ -174,16 +93,7 @@ public class DefaultFormatPrinter implements FormatPrinter {
             }
         }
     }
-
-    private static ThreadLocal<Integer> last = new ThreadLocal<Integer>() {
-        @Override
-        protected Integer initialValue() {
-            return 0;
-        }
-    };
-
-    private static final String[] ARMS = new String[]{"-A-", "-R-", "-M-", "-S-"};
-
+    
     private static String computeKey() {
         if (last.get() >= 4) {
             last.set(0);
@@ -192,7 +102,7 @@ public class DefaultFormatPrinter implements FormatPrinter {
         last.set(last.get() + 1);
         return s;
     }
-
+    
     /**
      * 此方法是为了解决在 AndroidStudio v3.1 以上 Logcat 输出的日志无法对齐的问题
      * <p>
@@ -208,26 +118,26 @@ public class DefaultFormatPrinter implements FormatPrinter {
     private static String resolveTag(String tag) {
         return computeKey() + tag;
     }
-
+    
     private static String[] getRequest(Request request) {
         String log;
         String header = request.headers().toString();
         log = METHOD_TAG + request.method() + DOUBLE_SEPARATOR +
-                (isEmpty(header) ? "" : HEADERS_TAG + LINE_SEPARATOR + dotHeaders(header));
+            (isEmpty(header) ? "" : HEADERS_TAG + LINE_SEPARATOR + dotHeaders(header));
         return log.split(LINE_SEPARATOR);
     }
-
+    
     private static String[] getResponse(String header, long tookMs, int code, boolean isSuccessful,
                                         List<String> segments, String message) {
         String log;
         String segmentString = slashSegments(segments);
         log = ((!TextUtils.isEmpty(segmentString) ? segmentString + " - " : "") + "is success : "
-                + isSuccessful + " - " + RECEIVED_TAG + tookMs + "ms" + DOUBLE_SEPARATOR + STATUS_CODE_TAG +
-                code + " / " + message + DOUBLE_SEPARATOR + (isEmpty(header) ? "" : HEADERS_TAG + LINE_SEPARATOR +
-                dotHeaders(header)));
+            + isSuccessful + " - " + RECEIVED_TAG + tookMs + "ms" + DOUBLE_SEPARATOR + STATUS_CODE_TAG +
+            code + " / " + message + DOUBLE_SEPARATOR + (isEmpty(header) ? "" : HEADERS_TAG + LINE_SEPARATOR +
+            dotHeaders(header)));
         return log.split(LINE_SEPARATOR);
     }
-
+    
     private static String slashSegments(List<String> segments) {
         StringBuilder segmentString = new StringBuilder();
         for (String segment : segments) {
@@ -235,7 +145,7 @@ public class DefaultFormatPrinter implements FormatPrinter {
         }
         return segmentString.toString();
     }
-
+    
     /**
      * 对 {@code header} 按规定的格式进行处理
      *
@@ -264,12 +174,100 @@ public class DefaultFormatPrinter implements FormatPrinter {
         }
         return builder.toString();
     }
-
+    
     private static String getTag(boolean isRequest) {
         if (isRequest) {
             return TAG + "-Request";
         } else {
             return TAG + "-Response";
         }
+    }
+    
+    /**
+     * 打印网络请求信息, 当网络请求时 {{@link okhttp3.RequestBody}} 可以解析的情况
+     *
+     * @param request
+     * @param bodyString
+     */
+    @Override
+    public void printJsonRequest(@NonNull Request request, @NonNull String bodyString) {
+        final String requestBody = LINE_SEPARATOR + BODY_TAG + LINE_SEPARATOR + bodyString;
+        final String tag = getTag(true);
+        
+        LogUtils.debugInfo(tag, REQUEST_UP_LINE);
+        logLines(tag, new String[]{URL_TAG + request.url()}, false);
+        logLines(tag, getRequest(request), true);
+        logLines(tag, requestBody.split(LINE_SEPARATOR), true);
+        LogUtils.debugInfo(tag, END_LINE);
+    }
+    
+    /**
+     * 打印网络请求信息, 当网络请求时 {{@link okhttp3.RequestBody}} 为 {@code null} 或不可解析的情况
+     *
+     * @param request
+     */
+    @Override
+    public void printFileRequest(@NonNull Request request) {
+        final String tag = getTag(true);
+        
+        LogUtils.debugInfo(tag, REQUEST_UP_LINE);
+        logLines(tag, new String[]{URL_TAG + request.url()}, false);
+        logLines(tag, getRequest(request), true);
+        logLines(tag, OMITTED_REQUEST, true);
+        LogUtils.debugInfo(tag, END_LINE);
+    }
+    
+    /**
+     * 打印网络响应信息, 当网络响应时 {{@link okhttp3.ResponseBody}} 可以解析的情况
+     *
+     * @param chainMs      服务器响应耗时(单位毫秒)
+     * @param isSuccessful 请求是否成功
+     * @param code         响应码
+     * @param headers      请求头
+     * @param contentType  服务器返回数据的数据类型
+     * @param bodyString   服务器返回的数据(已解析)
+     * @param segments     域名后面的资源地址
+     * @param message      响应信息
+     * @param responseUrl  请求地址
+     */
+    @Override
+    public void printJsonResponse(long chainMs, boolean isSuccessful, int code, @NonNull String headers, @Nullable MediaType contentType,
+                                  @Nullable String bodyString, @NonNull List<String> segments, @NonNull String message, @NonNull final String responseUrl) {
+        bodyString = RequestInterceptor.isJson(contentType) ? CharacterHandler.jsonFormat(bodyString)
+            : RequestInterceptor.isXml(contentType) ? CharacterHandler.xmlFormat(bodyString) : bodyString;
+        
+        final String responseBody = LINE_SEPARATOR + BODY_TAG + LINE_SEPARATOR + bodyString;
+        final String tag = getTag(false);
+        final String[] urlLine = {URL_TAG + responseUrl, N};
+        
+        LogUtils.debugInfo(tag, RESPONSE_UP_LINE);
+        logLines(tag, urlLine, true);
+        logLines(tag, getResponse(headers, chainMs, code, isSuccessful, segments, message), true);
+        logLines(tag, responseBody.split(LINE_SEPARATOR), true);
+        LogUtils.debugInfo(tag, END_LINE);
+    }
+    
+    /**
+     * 打印网络响应信息, 当网络响应时 {{@link okhttp3.ResponseBody}} 为 {@code null} 或不可解析的情况
+     *
+     * @param chainMs      服务器响应耗时(单位毫秒)
+     * @param isSuccessful 请求是否成功
+     * @param code         响应码
+     * @param headers      请求头
+     * @param segments     域名后面的资源地址
+     * @param message      响应信息
+     * @param responseUrl  请求地址
+     */
+    @Override
+    public void printFileResponse(long chainMs, boolean isSuccessful, int code, @NonNull String headers,
+                                  @NonNull List<String> segments, @NonNull String message, @NonNull final String responseUrl) {
+        final String tag = getTag(false);
+        final String[] urlLine = {URL_TAG + responseUrl, N};
+        
+        LogUtils.debugInfo(tag, RESPONSE_UP_LINE);
+        logLines(tag, urlLine, true);
+        logLines(tag, getResponse(headers, chainMs, code, isSuccessful, segments, message), true);
+        logLines(tag, OMITTED_RESPONSE, true);
+        LogUtils.debugInfo(tag, END_LINE);
     }
 }

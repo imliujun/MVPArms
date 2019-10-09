@@ -15,7 +15,6 @@
  */
 package com.jess.arms.di.component;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
@@ -23,7 +22,6 @@ import com.jess.arms.base.delegate.AppDelegate;
 import com.jess.arms.di.module.AppModule;
 import com.jess.arms.di.module.ClientModule;
 import com.jess.arms.di.module.GlobalConfigModule;
-import com.jess.arms.integration.AppManager;
 import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.integration.cache.Cache;
 import com.jess.arms.utils.ArmsUtils;
@@ -53,18 +51,6 @@ public interface AppComponent {
     Application application();
     
     /**
-     * 用于管理所有 {@link Activity}
-     * 之前 {@link AppManager} 使用 Dagger 保证单例, 只能使用 {@link AppComponent#appManager()} 访问
-     * 现在直接将 AppManager 独立为单例类, 可以直接通过静态方法 {@link AppManager#getAppManager()} 访问, 更加方便
-     * 但为了不影响之前使用 {@link AppComponent#appManager()} 获取 {@link AppManager} 的项目, 所以暂时保留这种访问方式
-     *
-     * @return {@link AppManager}
-     * @deprecated Use {@link AppManager#getAppManager()} instead
-     */
-    @Deprecated
-    AppManager appManager();
-    
-    /**
      * 用于管理网络请求层, 以及数据缓存层
      *
      * @return {@link IRepositoryManager}
@@ -92,7 +78,7 @@ public interface AppComponent {
      *
      * @return {@link Cache.Factory}
      */
-    Cache.Factory cacheFactory();
+    Cache.Factory<String, Object> cacheFactory();
     
     /**
      * 返回一个全局公用的线程池,适用于大多数异步需求。

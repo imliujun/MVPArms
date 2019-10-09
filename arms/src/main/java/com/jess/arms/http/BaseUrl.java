@@ -16,7 +16,6 @@
 package com.jess.arms.http;
 
 import androidx.annotation.NonNull;
-
 import okhttp3.HttpUrl;
 
 /**

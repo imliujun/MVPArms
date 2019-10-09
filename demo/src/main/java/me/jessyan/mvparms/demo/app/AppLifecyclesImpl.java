@@ -23,7 +23,6 @@ import com.jess.arms.base.delegate.AppLifecycles;
 
 import androidx.annotation.NonNull;
 import butterknife.ButterKnife;
-import io.reactivex.functions.Consumer;
 import io.reactivex.plugins.RxJavaPlugins;
 import me.jessyan.mvparms.demo.BuildConfig;
 import timber.log.Timber;

@@ -23,11 +23,11 @@ package com.jess.arms.utils;
  * ================================================
  */
 public class UrlEncoderUtils {
-
+    
     private UrlEncoderUtils() {
         throw new IllegalStateException("you can't instantiate me!");
     }
-
+    
     /**
      * 判断 str 是否已经 URLEncoder.encode() 过
      * 经常遇到这样的情况, 拿到一个 URL, 但是搞不清楚到底要不要 URLEncoder.encode()
@@ -54,7 +54,7 @@ public class UrlEncoderUtils {
         }
         return encode;
     }
-
+    
     /**
      * 判断 c 是否是 16 进制的字符
      *

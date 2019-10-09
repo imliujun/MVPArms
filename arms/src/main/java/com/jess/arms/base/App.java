@@ -15,9 +15,9 @@
  */
 package com.jess.arms.base;
 
-import androidx.annotation.NonNull;
-
 import com.jess.arms.di.component.AppComponent;
+
+import androidx.annotation.NonNull;
 
 /**
  * ================================================

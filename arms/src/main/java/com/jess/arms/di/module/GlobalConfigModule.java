@@ -29,7 +29,6 @@ import com.jess.arms.integration.cache.IntelligentCache;
 import com.jess.arms.integration.cache.LruCache;
 import com.jess.arms.utils.Preconditions;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -68,7 +67,7 @@ public class GlobalConfigModule {
     private ClientModule.OkhttpConfiguration mOkhttpConfiguration;
     private RequestInterceptor.Level mPrintHttpLogLevel;
     private FormatPrinter mFormatPrinter;
-    private Cache.Factory mCacheFactory;
+    private Cache.Factory<String, Object> mCacheFactory;
     private ExecutorService mExecutorService;
     
     private GlobalConfigModule(Builder builder) {
@@ -152,11 +151,12 @@ public class GlobalConfigModule {
     
     @Singleton
     @Provides
-    Cache.Factory provideCacheFactory(Application application) {
-        return mCacheFactory == null ? new Cache.Factory() {
+    Cache.Factory<String, Object> provideCacheFactory(Application application) {
+        return mCacheFactory == null ? new Cache.Factory<String, Object>() {
+            
             @NonNull
             @Override
-            public Cache build(CacheType type) {
+            public Cache<String, Object> build(CacheType type) {
                 //若想自定义 LruCache 的 size, 或者不想使用 LruCache, 想使用自己自定义的策略
                 //使用 GlobalConfigModule.Builder#cacheFactory() 即可扩展
                 switch (type.getCacheTypeId()) {
@@ -164,10 +164,10 @@ public class GlobalConfigModule {
                     case CacheType.EXTRAS_TYPE_ID:
                     case CacheType.ACTIVITY_CACHE_TYPE_ID:
                     case CacheType.FRAGMENT_CACHE_TYPE_ID:
-                        return new IntelligentCache(type.calculateCacheSize(application));
+                        return new IntelligentCache<>(type.calculateCacheSize(application));
                     //其余使用 LruCache (当达到最大容量时可根据 LRU 算法抛弃不合规数据)
                     default:
-                        return new LruCache(type.calculateCacheSize(application));
+                        return new LruCache<>(type.calculateCacheSize(application));
                 }
             }
         } : mCacheFactory;
@@ -195,7 +195,7 @@ public class GlobalConfigModule {
         private ClientModule.OkhttpConfiguration okhttpConfiguration;
         private RequestInterceptor.Level printHttpLogLevel;
         private FormatPrinter formatPrinter;
-        private Cache.Factory cacheFactory;
+        private Cache.Factory<String, Object> cacheFactory;
         private ExecutorService executorService;
         
         private Builder() {
@@ -248,7 +248,7 @@ public class GlobalConfigModule {
             return this;
         }
         
-        public Builder cacheFactory(Cache.Factory cacheFactory) {
+        public Builder cacheFactory(Cache.Factory<String, Object> cacheFactory) {
             this.cacheFactory = cacheFactory;
             return this;
         }

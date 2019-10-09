@@ -18,16 +18,15 @@ package com.jess.arms.base.delegate;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.jess.arms.di.component.AppComponent;
-import com.jess.arms.integration.cache.Cache;
-import com.jess.arms.integration.cache.LruCache;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 /**
  * ================================================
@@ -40,24 +39,14 @@ import com.jess.arms.integration.cache.LruCache;
  * ================================================
  */
 public interface IFragment {
-
-    /**
-     * 提供在 {@link Fragment} 生命周期内的缓存容器, 可向此 {@link Fragment} 存取一些必要的数据
-     * 此缓存容器和 {@link Fragment} 的生命周期绑定, 如果 {@link Fragment} 在屏幕旋转或者配置更改的情况下
-     * 重新创建, 那此缓存容器中的数据也会被清空, 如果你想避免此种情况请使用 <a href="https://github.com/JessYanCoding/LifecycleModel">LifecycleModel</a>
-     *
-     * @return like {@link LruCache}
-     */
-    @NonNull
-    Cache<String, Object> provideCache();
-
+    
     /**
      * 提供 AppComponent (提供所有的单例对象) 给实现类, 进行 Component 依赖
      *
      * @param appComponent
      */
     void setupFragmentComponent(@NonNull AppComponent appComponent);
-
+    
     /**
      * 是否使用 EventBus
      * Arms 核心库现在并不会依赖某个 EventBus, 要想使用 EventBus, 还请在项目中自行依赖对应的 EventBus
@@ -68,7 +57,7 @@ public interface IFragment {
      * @return 返回 {@code true}, Arms 会自动注册 EventBus
      */
     boolean useEventBus();
-
+    
     /**
      * 初始化 View
      *
@@ -78,14 +67,14 @@ public interface IFragment {
      * @return
      */
     View initView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
-
+    
     /**
      * 初始化数据
      *
      * @param savedInstanceState
      */
     void initData(@Nullable Bundle savedInstanceState);
-
+    
     /**
      * 通过此方法可以使 Fragment 能够与外界做一些交互和通信, 比如说外部的 Activity 想让自己持有的某个 Fragment 对象执行一些方法,
      * 建议在有多个需要与外界交互的方法时, 统一传 {@link Message}, 通过 what 字段来区分不同的方法, 在 {@link #setData(Object)}
@@ -119,7 +108,7 @@ public interface IFragment {
      * data.arg1 = 1;
      * fragment.setData(data);
      * </pre>
-     *
+     * <p>
      * {@link #setData(Object)} 框架是不会调用的, 是拿给开发者自己去调用的, 让 {@link Activity} 或者其他类可以和 {@link Fragment} 通信,
      * 并且因为 {@link #setData(Object)} 是 {@link IFragment} 的方法, 所以你可以通过多态, 持有父类,
      * 不持有具体子类的方式就可以和子类 {@link Fragment} 通信, 这样如果需要替换子类, 就不会影响到其他地方,

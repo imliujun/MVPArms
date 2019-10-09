@@ -16,14 +16,8 @@
 package com.jess.arms.di.module;
 
 import android.app.Application;
-import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
 
-import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.integration.ActivityLifecycle;
-import com.jess.arms.integration.AppManager;
 import com.jess.arms.integration.FragmentLifecycle;
 import com.jess.arms.integration.IRepositoryManager;
 import com.jess.arms.integration.RepositoryManager;
@@ -37,6 +31,7 @@ import java.util.List;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import androidx.fragment.app.FragmentManager;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -52,46 +47,32 @@ import dagger.Provides;
  */
 @Module
 public abstract class AppModule {
-
-
-    /**
-     * 之前 {@link AppManager} 使用 Dagger 保证单例, 只能使用 {@link AppComponent#appManager()} 访问
-     * 现在直接将 AppManager 独立为单例类, 可以直接通过静态方法 {@link AppManager#getAppManager()} 访问, 更加方便
-     * 但为了不影响之前使用 {@link AppComponent#appManager()} 获取 {@link AppManager} 的项目, 所以暂时保留这种访问方式
-     *
-     * @param application
-     * @return
-     */
+    
+    
     @Singleton
     @Provides
-    static AppManager provideAppManager(Application application) {
-        return AppManager.getAppManager().init(application);
-    }
-
-    @Binds
-    abstract IRepositoryManager bindRepositoryManager(RepositoryManager repositoryManager);
-
-    @Singleton
-    @Provides
-    static Cache<String, Object> provideExtras(Cache.Factory cacheFactory) {
+    static Cache<String, Object> provideExtras(Cache.Factory<String, Object> cacheFactory) {
         return cacheFactory.build(CacheType.EXTRAS);
     }
-
-    @Binds
-    @Named("ActivityLifecycle")
-    abstract Application.ActivityLifecycleCallbacks bindActivityLifecycle(ActivityLifecycle activityLifecycle);
-
-    @Binds
-    @Named("ActivityLifecycleForRxLifecycle")
-    abstract Application.ActivityLifecycleCallbacks bindActivityLifecycleForRxLifecycle(ActivityLifecycleForRxLifecycle activityLifecycleForRxLifecycle);
-
-    @Binds
-    abstract FragmentManager.FragmentLifecycleCallbacks bindFragmentLifecycle(FragmentLifecycle fragmentLifecycle);
-
+    
     @Singleton
     @Provides
     static List<FragmentManager.FragmentLifecycleCallbacks> provideFragmentLifecycles() {
         return new ArrayList<>();
     }
-
+    
+    @Binds
+    abstract IRepositoryManager bindRepositoryManager(RepositoryManager repositoryManager);
+    
+    @Binds
+    @Named("ActivityLifecycle")
+    abstract Application.ActivityLifecycleCallbacks bindActivityLifecycle(ActivityLifecycle activityLifecycle);
+    
+    @Binds
+    @Named("ActivityLifecycleForRxLifecycle")
+    abstract Application.ActivityLifecycleCallbacks bindActivityLifecycleForRxLifecycle(ActivityLifecycleForRxLifecycle activityLifecycleForRxLifecycle);
+    
+    @Binds
+    abstract FragmentManager.FragmentLifecycleCallbacks bindFragmentLifecycle(FragmentLifecycle fragmentLifecycle);
+    
 }

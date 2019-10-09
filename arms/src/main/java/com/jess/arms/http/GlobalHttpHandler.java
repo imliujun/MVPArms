@@ -15,11 +15,10 @@
  */
 package com.jess.arms.http;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.jess.arms.di.module.GlobalConfigModule;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -36,7 +35,27 @@ import okhttp3.Response;
  * ================================================
  */
 public interface GlobalHttpHandler {
-
+    
+    /**
+     * 空实现
+     */
+    GlobalHttpHandler EMPTY = new GlobalHttpHandler() {
+        
+        @NonNull
+        @Override
+        public Response onHttpResultResponse(@Nullable String httpResult, @NonNull Interceptor.Chain chain, @NonNull Response response) {
+            //不管是否处理, 都必须将 response 返回出去
+            return response;
+        }
+        
+        @NonNull
+        @Override
+        public Request onHttpRequestBefore(@NonNull Interceptor.Chain chain, @NonNull Request request) {
+            //不管是否处理, 都必须将 request 返回出去
+            return request;
+        }
+    };
+    
     /**
      * 这里可以先客户端一步拿到每一次 Http 请求的结果, 可以先解析成 Json, 再做一些操作, 如检测到 token 过期后
      * 重新请求 token, 并重新执行请求
@@ -48,7 +67,7 @@ public interface GlobalHttpHandler {
      */
     @NonNull
     Response onHttpResultResponse(@Nullable String httpResult, @NonNull Interceptor.Chain chain, @NonNull Response response);
-
+    
     /**
      * 这里可以在请求服务器之前拿到 {@link Request}, 做一些操作比如给 {@link Request} 统一添加 token 或者 header 以及参数加密等操作
      *
@@ -58,24 +77,4 @@ public interface GlobalHttpHandler {
      */
     @NonNull
     Request onHttpRequestBefore(@NonNull Interceptor.Chain chain, @NonNull Request request);
-
-    /**
-     * 空实现
-     */
-    GlobalHttpHandler EMPTY = new GlobalHttpHandler() {
-
-        @NonNull
-        @Override
-        public Response onHttpResultResponse(@Nullable String httpResult, @NonNull Interceptor.Chain chain, @NonNull Response response) {
-            //不管是否处理, 都必须将 response 返回出去
-            return response;
-        }
-
-        @NonNull
-        @Override
-        public Request onHttpRequestBefore(@NonNull Interceptor.Chain chain, @NonNull Request request) {
-            //不管是否处理, 都必须将 request 返回出去
-            return request;
-        }
-    };
 }

@@ -3,13 +3,15 @@ apply plugin: 'com.github.dcendents.android-maven'
 
 Properties properties = new Properties()
 boolean isHasFile = false
-if (project.rootProject.findProject('local.properties') != null){
+if (project.rootProject.findProject('local.properties') != null) {
     isHasFile = true
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
 }
 
-def gitUrl = 'https://github.com/JessYanCoding/MVPArms.git'   // Git仓库的url
-def siteUrl = 'https://github.com/JessYanCoding/MVPArms'   // 项目的主页
+def gitUrl = 'https://github.com/JessYanCoding/MVPArms.git'
+// Git仓库的url
+def siteUrl = 'https://github.com/JessYanCoding/MVPArms'
+// 项目的主页
 
 version = rootProject.ext.android["versionName"]
 group = "me.jessyan"
@@ -39,7 +41,6 @@ bintray {
 }
 
 
-
 install {
     repositories.mavenInstaller {
         // This generates POM.xml with proper parameters
@@ -59,8 +60,8 @@ install {
                 }
                 developers {
                     developer {
-                        id 'JessYanCoding'        //填写bintray或者github的用户名
-                        name 'jessyan'         //姓名，可以是中文
+                        id 'JessYanCoding' //填写bintray或者github的用户名
+                        name 'jessyan' //姓名，可以是中文
                         email 'jess.yan.effort@gmail.com'
                     }
                 }

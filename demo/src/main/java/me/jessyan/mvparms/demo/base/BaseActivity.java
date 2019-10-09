@@ -20,11 +20,8 @@ import android.os.Bundle;
 import android.view.InflateException;
 
 import com.jess.arms.base.delegate.IActivity;
-import com.jess.arms.integration.cache.Cache;
-import com.jess.arms.integration.cache.CacheType;
 import com.jess.arms.integration.lifecycle.ActivityLifecycleable;
 import com.jess.arms.mvp.IPresenter;
-import com.jess.arms.utils.ArmsUtils;
 import com.trello.rxlifecycle3.android.ActivityEvent;
 
 import javax.inject.Inject;
@@ -55,19 +52,10 @@ import io.reactivex.subjects.Subject;
 public abstract class BaseActivity<P extends IPresenter> extends AppCompatActivity implements IActivity, ActivityLifecycleable {
     protected final String TAG = this.getClass().getSimpleName();
     private final BehaviorSubject<ActivityEvent> mLifecycleSubject = BehaviorSubject.create();
-    private Cache<String, Object> mCache;
     @Inject
     @Nullable
     protected P mPresenter;//如果当前页面逻辑简单, Presenter 可以为 null
     
-    @NonNull
-    @Override
-    public synchronized Cache<String, Object> provideCache() {
-        if (mCache == null) {
-            mCache = ArmsUtils.obtainAppComponentFromContext(this).cacheFactory().build(CacheType.ACTIVITY_CACHE);
-        }
-        return mCache;
-    }
     
     @NonNull
     @Override

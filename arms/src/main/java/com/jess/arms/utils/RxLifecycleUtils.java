@@ -38,11 +38,11 @@ import io.reactivex.annotations.NonNull;
  */
 
 public class RxLifecycleUtils {
-
+    
     private RxLifecycleUtils() {
         throw new IllegalStateException("you can't instantiate me!");
     }
-
+    
     /**
      * 绑定 Activity 的指定生命周期
      *
@@ -60,7 +60,7 @@ public class RxLifecycleUtils {
             throw new IllegalArgumentException("view isn't ActivityLifecycleable");
         }
     }
-
+    
     /**
      * 绑定 Fragment 的指定生命周期
      *
@@ -78,13 +78,13 @@ public class RxLifecycleUtils {
             throw new IllegalArgumentException("view isn't FragmentLifecycleable");
         }
     }
-
+    
     public static <T, R> LifecycleTransformer<T> bindUntilEvent(@NonNull final Lifecycleable<R> lifecycleable,
                                                                 final R event) {
         Preconditions.checkNotNull(lifecycleable, "lifecycleable == null");
         return RxLifecycle.bindUntilEvent(lifecycleable.provideLifecycleSubject(), event);
     }
-
+    
     /**
      * 绑定 Activity/Fragment 的生命周期
      *
@@ -100,7 +100,7 @@ public class RxLifecycleUtils {
             throw new IllegalArgumentException("view isn't Lifecycleable");
         }
     }
-
+    
     public static <T> LifecycleTransformer<T> bindToLifecycle(@NonNull Lifecycleable lifecycleable) {
         Preconditions.checkNotNull(lifecycleable, "lifecycleable == null");
         if (lifecycleable instanceof ActivityLifecycleable) {

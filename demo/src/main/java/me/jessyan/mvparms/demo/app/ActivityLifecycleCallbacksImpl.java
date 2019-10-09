@@ -19,10 +19,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import me.jessyan.mvparms.demo.R;
 import timber.log.Timber;
 
@@ -36,12 +36,12 @@ import timber.log.Timber;
  * ================================================
  */
 public class ActivityLifecycleCallbacksImpl implements Application.ActivityLifecycleCallbacks {
-
+    
     @Override
     public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
         Timber.i(activity + " - onActivityCreated");
     }
-
+    
     @Override
     public void onActivityStarted(Activity activity) {
         Timber.i(activity + " - onActivityStarted");
@@ -71,27 +71,27 @@ public class ActivityLifecycleCallbacksImpl implements Application.ActivityLifec
             }
         }
     }
-
+    
     @Override
     public void onActivityResumed(Activity activity) {
         Timber.i(activity + " - onActivityResumed");
     }
-
+    
     @Override
     public void onActivityPaused(Activity activity) {
         Timber.i(activity + " - onActivityPaused");
     }
-
+    
     @Override
     public void onActivityStopped(Activity activity) {
         Timber.i(activity + " - onActivityStopped");
     }
-
+    
     @Override
     public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
         Timber.i(activity + " - onActivitySaveInstanceState");
     }
-
+    
     @Override
     public void onActivityDestroyed(Activity activity) {
         Timber.i(activity + " - onActivityDestroyed");
