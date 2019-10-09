@@ -16,12 +16,12 @@
 package com.jess.arms.integration.lifecycle;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 
 import com.jess.arms.utils.RxLifecycleUtils;
-import com.trello.rxlifecycle2.RxLifecycle;
+import com.trello.rxlifecycle3.RxLifecycle;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import io.reactivex.subjects.Subject;
 
 /**

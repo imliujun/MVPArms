@@ -15,16 +15,13 @@
  */
 package me.jessyan.mvparms.demo.di.module;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-
 import com.jess.arms.di.scope.ActivityScope;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -45,22 +42,17 @@ import me.jessyan.mvparms.demo.mvp.ui.adapter.UserAdapter;
  */
 @Module
 public abstract class UserModule {
-
+    
     @Binds
     abstract UserContract.Model bindUserModel(UserModel model);
-
-    @ActivityScope
-    @Provides
-    static RxPermissions provideRxPermissions(UserContract.View view) {
-        return new RxPermissions((FragmentActivity) view.getActivity());
-    }
-
+    
+    
     @ActivityScope
     @Provides
     static RecyclerView.LayoutManager provideLayoutManager(UserContract.View view) {
         return new GridLayoutManager(view.getActivity(), 2);
     }
-
+    
     @ActivityScope
     @Provides
     static List<User> provideUserList() {

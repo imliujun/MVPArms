@@ -17,8 +17,7 @@ package me.jessyan.mvparms.demo.app.utils;
 
 import com.jess.arms.mvp.IView;
 import com.jess.arms.utils.RxLifecycleUtils;
-import com.trello.rxlifecycle2.LifecycleTransformer;
-import com.trello.rxlifecycle2.RxLifecycle;
+import com.trello.rxlifecycle3.LifecycleTransformer;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;

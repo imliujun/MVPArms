@@ -17,12 +17,11 @@ package me.jessyan.mvparms.demo.app;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.view.View;
 import com.jess.arms.integration.cache.IntelligentCache;
 import com.jess.arms.utils.ArmsUtils;
-import com.squareup.leakcanary.RefWatcher;
 import timber.log.Timber;
 
 /**
@@ -94,11 +93,6 @@ public class FragmentLifecycleCallbacksImpl extends FragmentManager.FragmentLife
     @Override
     public void onFragmentDestroyed(FragmentManager fm, Fragment f) {
         Timber.i(f.toString() + " - onFragmentDestroyed");
-        ((RefWatcher) ArmsUtils
-                .obtainAppComponentFromContext(f.getActivity())
-                .extras()
-                .get(IntelligentCache.getKeyOfKeep(RefWatcher.class.getName())))
-                .watch(f);
     }
 
     @Override

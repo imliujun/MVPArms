@@ -15,14 +15,13 @@
  */
 package me.jessyan.mvparms.demo.mvp.ui.adapter;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.jess.arms.base.BaseHolder;
-import com.jess.arms.base.DefaultAdapter;
+import me.jessyan.mvparms.demo.mvp.ui.holder.BaseHolder;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import me.jessyan.mvparms.demo.R;
 import me.jessyan.mvparms.demo.mvp.model.entity.User;
 import me.jessyan.mvparms.demo.mvp.ui.holder.UserItemHolder;

@@ -17,12 +17,10 @@ package com.jess.arms.di.module;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.jess.arms.di.component.AppComponent;
 import com.jess.arms.integration.ActivityLifecycle;
 import com.jess.arms.integration.AppManager;
@@ -55,14 +53,6 @@ import dagger.Provides;
 @Module
 public abstract class AppModule {
 
-    @Singleton
-    @Provides
-    static Gson provideGson(Application application, @Nullable GsonConfiguration configuration) {
-        GsonBuilder builder = new GsonBuilder();
-        if (configuration != null)
-            configuration.configGson(application, builder);
-        return builder.create();
-    }
 
     /**
      * 之前 {@link AppManager} 使用 Dagger 保证单例, 只能使用 {@link AppComponent#appManager()} 访问
@@ -104,7 +94,4 @@ public abstract class AppModule {
         return new ArrayList<>();
     }
 
-    public interface GsonConfiguration {
-        void configGson(@NonNull Context context, @NonNull GsonBuilder builder);
-    }
 }

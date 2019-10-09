@@ -13,39 +13,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.jess.arms.http.imageloader;
+package me.jessyan.mvparms.demo.util;
 
-import android.widget.ImageView;
+import android.app.Activity;
+import android.app.Dialog;
+import android.view.View;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * ================================================
- * 这里是图片加载配置信息的基类,定义一些所有图片加载框架都可以用的通用参数
- * 每个 {@link BaseImageLoaderStrategy} 应该对应一个 {@link ImageConfig} 实现类
- * <p>
- * Created by JessYan on 8/5/16 15:19
+ * Created by JessYan on 17/03/2016 13:59
  * <a href="mailto:jess.yan.effort@gmail.com">Contact me</a>
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-public class ImageConfig {
-    protected String url;
-    protected ImageView imageView;
-    protected int placeholder;//占位符
-    protected int errorPic;//错误占位符
-
-    public String getUrl() {
-        return url;
+public class ThirdViewUtil {
+    
+    private ThirdViewUtil() {
+        throw new IllegalStateException("you can't instantiate me!");
     }
-
-    public ImageView getImageView() {
-        return imageView;
+    
+    
+    public static Unbinder bindTarget(Object target, Object source) {
+        if (source instanceof Activity) {
+            return ButterKnife.bind(target, (Activity) source);
+        } else if (source instanceof View) {
+            return ButterKnife.bind(target, (View) source);
+        } else if (source instanceof Dialog) {
+            return ButterKnife.bind(target, (Dialog) source);
+        } else {
+            return Unbinder.EMPTY;
+        }
     }
-
-    public int getPlaceholder() {
-        return placeholder;
-    }
-
-    public int getErrorPic() {
-        return errorPic;
-    }
+    
 }

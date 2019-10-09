@@ -16,11 +16,11 @@
 package com.jess.arms.integration;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.jess.arms.mvp.IModel;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import retrofit2.Retrofit;
 
 /**
@@ -35,7 +35,7 @@ import retrofit2.Retrofit;
  * ================================================
  */
 public interface IRepositoryManager {
-
+    
     /**
      * 根据传入的 Class 获取对应的 Retrofit service
      *
@@ -45,23 +45,8 @@ public interface IRepositoryManager {
      */
     @NonNull
     <T> T obtainRetrofitService(@NonNull Class<T> service);
-
-
-    /**
-     * 根据传入的 Class 获取对应的 RxCache service
-     *
-     * @param cache RxCache service class
-     * @param <T>   RxCache service 类型
-     * @return RxCache service
-     */
-    @NonNull
-    <T> T obtainCacheService(@NonNull Class<T> cache);
-
-    /**
-     * 清理所有缓存
-     */
-    void clearAllCache();
-
+    
+    
     /**
      * 获取 {@link Context}
      *
@@ -69,16 +54,16 @@ public interface IRepositoryManager {
      */
     @NonNull
     Context getContext();
-
+    
     /**
      * 设置一个可以委托创建服务的接口
      *
      * @param delegate 委托接口，可为空
      */
     void setObtainServiceDelegate(@Nullable ObtainServiceDelegate delegate);
-
+    
     interface ObtainServiceDelegate {
-
+        
         @Nullable
         <T> T createRetrofitService(Retrofit retrofit, Class<T> serviceClass);
     }
