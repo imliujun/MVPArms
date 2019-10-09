@@ -51,7 +51,7 @@ public class FragmentLifecycle extends FragmentManager.FragmentLifecycleCallback
     
     @Override
     public void onFragmentCreated(@NonNull FragmentManager fm, @NonNull Fragment f, Bundle savedInstanceState) {
-        if (f instanceof IFragment && f.isAdded()) {
+        if (f instanceof IFragment) {
             IFragment iFragment = (IFragment) f;
             //如果要使用eventbus请将此方法返回true
             if (iFragment.useEventBus()) {
@@ -100,7 +100,7 @@ public class FragmentLifecycle extends FragmentManager.FragmentLifecycleCallback
     
     @Override
     public void onFragmentDestroyed(@NonNull FragmentManager fm, @NonNull Fragment f) {
-        if (f instanceof IFragment && f.isAdded()) {
+        if (f instanceof IFragment) {
             IFragment iFragment = (IFragment) f;
             //如果要使用eventbus请将此方法返回true
             if (iFragment.useEventBus()) {
